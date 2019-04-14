@@ -1,39 +1,37 @@
 import React, { Component } from 'react'
-import { View, Text,TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import CBTypes from '../Redux/CBRedux'
 
-import CBInput from '../Components/CBInput'
-import CBButton from '../Components/CBButton'
-
-import styles from './Styles/RegisterScreenStyle'
+import RegisterScreenComponent from '../Components/RegisterScreen'
 
 class RegisterScreen extends Component {
 
     state = {
-        username: 'Isaac',
-        email: 'Isaacsantos9876@gmail.com',
-        password: '123456'
+        username: '',
+        email: '',
+        password: ''
     }
 
-    setUsername = (username) => {
-        this.setState({username})
+    //Coloca username, email e password no state
+    getHandler = (key) => (val) => {
+        this.setState({ [key]: val });
     }
-
-    setEmail = (email) => {
-        this.setState({email})
-    }
-
-    setPassword = (password) => {
-        this.setState({password})
-    }
-
+    
+    //Login no firebase
     cadastrar = () => {
-        this.props.onPress(this.state.username, this.state.email, this.state.password)
-        const { navigate } = this.props.navigation
-        navigate('ChatScreen')
+        let username = this.state.username
+        let email = this.state.email 
+        let password = this.state.password
+        if (username != '' && email != '' && password != '') {
+            this.props.onPress(username, email, password)
+            const { navigate } = this.props.navigation
+            navigate('ChatScreen')
+        } else {
+            alert('Por favor, preencha todos os campos para continuar')
+        }
     }
 
+    //Navega para tela de Login
     navLogin = () => {
         const { navigate } = this.props.navigation
         navigate('LoginScreen')
@@ -41,23 +39,10 @@ class RegisterScreen extends Component {
 
     render() {
         return(
-            <View style={styles.container}>
-                <View style={styles.containerUser}>
-                    <Text style={styles.name}>ChatBot</Text>
-
-                    <View style={styles.containerInput}>
-                        <CBInput placeholder='Usuário' onChangeText={this.setUsername} />
-                        <CBInput style={styles.div} placeholder='E-mail' onChangeText={this.setEmail}/>
-                        <CBInput style={styles.div} placeholder='Senha' onChangeText={this.setPassword} secureTextEntry={true}/>
-                    </View>
-
-                    <CBButton title='Cadastrar' onPress={this.cadastrar}/>
-                </View>
-
-                <TouchableOpacity style={styles.btnCadastro} onPress={this.navLogin}>
-                    <Text style={styles.btnCadastroText}>Login</Text>
-                </TouchableOpacity>
-            </View>
+            <RegisterScreenComponent 
+                getHandler={this.getHandler}
+                cadastrar={this.cadastrar}
+                navLogin={this.navLogin} />
         )
     }
  }
