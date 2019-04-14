@@ -1,34 +1,35 @@
 import React, { Component } from 'react'
-import { View, Text,TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import CBTypes from '../Redux/CBRedux'
 
-import CBInput from '../Components/CBInput'
-import CBButton from '../Components/CBButton'
-
-import styles from './Styles/LoginScreenStyle'
+import LoginScreenComponent from '../Components/LoginScreen'
 
 class LoginScreen extends Component {
 
     state = {
-        email: 'Isaacsantos9876@gmail.com',
-        password: '123456'
+        email: '',
+        password: ''
     }
 
-    setEmail = (email) => {
-        this.setState({email})
+    //Coloca email e password no state
+    getHandler = (key) => (val) => {
+        this.setState({ [key]: val });
     }
 
-    setPassword = (password) => {
-        this.setState({password})
-    }
-
+    //Login no firebase
     login = () => {
-        this.props.onPress(this.state.email, this.state.password)
-        const { navigate } = this.props.navigation
-        navigate('ChatScreen')
+        let email = this.state.email
+        let password = this.state.password
+        if(email != '' && password != '') {
+            this.props.onPress(email, password)
+            const { navigate } = this.props.navigation
+            navigate('ChatScreen')
+        } else {
+            alert('Por favor, preencha todos os campos para continuar')
+        }
     }
 
+    //Navega para a tela de Cadastro
     navCadastro = () => {
         const { navigate } = this.props.navigation
         navigate('RegisterScreen')
@@ -36,23 +37,10 @@ class LoginScreen extends Component {
 
     render() {
         return(
-            <View style={styles.container}>
-                <View style={styles.containerUser}>
-                    <Text style={styles.name}>ChatBot</Text>
-
-                    <View style={styles.containerInput}>
-                        <CBInput placeholder='E-mail' onChangeText={this.setEmail} />
-                        <CBInput style={styles.div} placeholder='Senha' onChangeText={this.setPassword} secureTextEntry={true}/>
-                    </View>
-
-                    <CBButton title='Login' onPress={this.login}/>
-                </View>
-
-                <TouchableOpacity style={styles.btnCadastro} onPress={this.navCadastro}>
-                    <Text style={styles.btnCadastroText}>Cadastrar</Text>
-                </TouchableOpacity>
-
-            </View>
+            <LoginScreenComponent 
+                getHandler={this.getHandler}
+                login={this.login}
+                navCadastro={this.navCadastro} />
         )
     }
  }

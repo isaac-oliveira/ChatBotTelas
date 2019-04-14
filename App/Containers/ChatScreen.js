@@ -1,37 +1,43 @@
 import React, { Component } from 'react'
-import { View, FlatList, Text, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 import CBSelectors from '../Redux/CBRedux'
 
-import CBIconButton from '../Components/CBIconButton'
-import CBInput from '../Components/CBInput'
-
-import styles from './Styles/ChatScreenStyle'
+import ChatScreenComponent from '../Components/ChatScreen'
 
 var steps = null
-class ChatScreen extends Component {
-    
-    chatInput = null
+var chatInput = null
 
+class ChatScreen extends Component {
     state = {
         id: 0,
         list: [],
-        userMsg: 'Olá',
+        userMsg: '',
     }   
 
+    //Coloca o texto do input no state
     setUserMsg = (userMsg) => {
         this.setState({userMsg})
     }
 
+    //Pega a referência do input
+    refInput = (input) => {
+        this.chatInput = input
+    }
+
     onPress = () => {
         if(this.state.userMsg != '') {
+            // Coloca mais uma mensagem na lista
             this.setState({
                 list: [{isMy: false, msg: steps[this.state.userMsg]}].concat([{isMy: true, msg: this.state.userMsg}]).concat(this.state.list),
             })
+            this.chatInput.clear();
+        } else {
+            alert('Digite alguma coisa!')
         }
     }
 
     render() {
+        //Lista para pode visualizar a lista de mensagem
         steps = {
             'Olá': `Olá, ${this.props.username}`,
             'Tudo bom?': 'Sim e você?',
@@ -42,29 +48,11 @@ class ChatScreen extends Component {
         }
 
         return(
-            <View style={styles.container}>
-                <FlatList 
-                    inverted
-                    style={styles.list}
-                    data={this.state.list}
-                    renderItem={({item}) =>{
-                         if(item.isMy) return (
-                             <View style={styles.containerUser}>
-                                 <Text style={styles.containerUserText}>{item.msg}</Text>
-                             </View>
-                         )
-                         return (
-                         <View style={styles.containerRobot}>
-                            <Text style={styles.containerRobotText}>{item.msg}</Text>
-                        </View>)
-                        }}
-                    keyExtractor={item => item.msg} />
-                    
-                <View style={styles.containerInput}>
-                    <CBInput style={styles.input} onChangeText={this.setUserMsg} placeholder='Digite uma mensagem'/>
-                    <CBIconButton style={styles.icon} color='#077' icon='send' size='22' onPress={this.onPress}/>
-                </View>
-            </View>
+            <ChatScreenComponent 
+                reference={this.refInput}
+                onPress={this.onPress} 
+                setUserMsg={this.setUserMsg} 
+                list={this.state.list} />
         )
     }
 }
