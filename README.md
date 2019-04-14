@@ -6,5 +6,6 @@ Tela de Login
 Tela de Cadastro
 ![alt text](https://raw.githubusercontent.com/isaac-oliveira/ChatBotTelas/master/screenshot/tela-cadastro.png)
 Tela de Chat
-![alt text](https://raw.githubusercontent.com/isaac-oliveira/ChatBotTelas/master/screenshot/tela-chat.png)
+<img src="https://raw.githubusercontent.com/isaac-oliveira/ChatBotTelas/master/screenshot/tela-chat.png" alt="My cool logo"/>
+
 
